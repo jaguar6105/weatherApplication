@@ -45,7 +45,7 @@ $(".citySearch").on("click", function() {
               display.city = response.name;
               display.temp = toFahr(response.main.temp);
               display.humid = response.main.humidity;
-              display.wind = response.wind.speed;
+              display.wind = toMPH(response.wind.speed);
               //display.uv = response.
               updateDisplay();
               api5DayForcast(display.city);
@@ -150,6 +150,12 @@ function init() {
 function toFahr(temp) {
 
     return Math.floor(parseFloat((temp - 273.15) * 1.80 +32));
+}
+
+//converts wind speed to from m/s to mph
+function toMPH(speed) {
+    return speed * 2.237
+
 }
 
 init();
