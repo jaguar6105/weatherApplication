@@ -43,7 +43,7 @@ $(".citySearch").on("click", function() {
             .then(function(response) {
               console.log(response);
               display.city = response.name;
-              display.temp = response.main.temp;
+              display.temp = toFahr(response.main.temp);
               display.humid = response.main.humidity;
               display.wind = response.wind.speed;
               //display.uv = response.
@@ -88,7 +88,7 @@ $(".citySearch").on("click", function() {
 
 
             date.text(dateStr[0]);
-            temp.text("Temp: " + fiveDayForcast[i].main.temp + " F");
+            temp.text("Temp: " + toFahr(fiveDayForcast[i].main.temp) + " F");
             humid.text("Humidity: " + fiveDayForcast[i].main.humidity + "%");
 
             div.append(date);
@@ -136,6 +136,7 @@ function storeData() {
     localStorage.setItem("Searches", citiesString);
   }
 
+  //initialize the data
 function init() {
     if(loadData()) {
         for(var i = cityArray.length; i >= 0; i--) {
@@ -143,6 +144,12 @@ function init() {
         }
         apiSearch(cityArray[0]);
     }
+}
+
+//converts temperature to fahrenheit
+function toFahr(temp) {
+
+    return Math.floor(parseFloat((temp - 273.15) * 1.80 +32));
 }
 
 init();
