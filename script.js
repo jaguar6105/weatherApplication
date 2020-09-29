@@ -96,17 +96,21 @@ function fiveDayForcastDiv() {
         var date = $("<p>");
         var temp = $("<p>");
         var humid = $("<p>");
+        var image = $("<img>");
 
         var dateStr = fiveDayForcast[i].dt_txt.split(" ");
 
         div.addClass("day");
         spaceDiv.addClass("space");
 
+        image.attr("src", "https://openweathermap.org/img/wn/" + fiveDayForcast[i].weather[0].icon +"@2x.png");
+
         date.text(dateStr[0]);
         temp.text("Temp: " + toFahr(fiveDayForcast[i].main.temp) + " F");
         humid.text("Humidity: " + fiveDayForcast[i].main.humidity + "%");
 
         div.append(date);
+        div.append(image);
         div.append(temp);
         div.append(humid);
         $(".fiveDay").append(div);
@@ -126,6 +130,7 @@ function api5DayForcast(city) {
         method: "GET"
     })
         .then(function (response) {
+            console.log(response);
             fiveDayForcast = response.list;
             fiveDayForcastDiv();
 
