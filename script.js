@@ -12,6 +12,8 @@ var fiveDayForcast = [];
 
 $(".citySearch").on("click", function() {
     var citySearch = $(".cityInput").val();
+    cityArray.unshift(citySearch);
+    storeData();
 
     searchDiv(citySearch);
     apiSearch(citySearch);
@@ -27,6 +29,7 @@ $(".citySearch").on("click", function() {
         $(".uv").text("UV Index: " + display.uv);
     }
 
+    //ajax call for current weather
     function apiSearch(city) {
         var citySearch = city;
         var apiKey = "9079e0330fe858fe04fbf89c11cb7f8c";
@@ -67,6 +70,7 @@ $(".citySearch").on("click", function() {
             });
     }
 
+    //creates html elements for five day forcast
     function fiveDayForcastDiv() {
         $(".fiveDay").empty();
         for(var i = 0; i < 5; i++) {
@@ -105,3 +109,33 @@ $(".citySearch").on("click", function() {
             apiSearch($(this).attr("city"));
         });
     }
+
+
+//load text array
+function loadData() {
+    var cityJson = localStorage.getItem("Searches");
+    if(cityJson) {
+        cityArray = JSON.parse(cityJson);
+        return true
+    }
+    else {
+        return false;
+    }
+}
+
+//stores array cityArray
+function storeData() {
+    var citiesString = JSON.stringify(cityArray);
+    localStorage.setItem("Searches", citiesString);
+  }
+
+function init() {
+    if(loadData()) {
+        for(var i = cityArray.length; i >= 0; i--) {
+            searchDiv(cityArray[i]);
+        }
+        apiSearch(cityArray[0]);
+    }
+}
+
+init();
