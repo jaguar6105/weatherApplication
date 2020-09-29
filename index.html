@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Weather</title>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+        integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-3">
+                <h1>Search For City:</h1>
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" placeholder="City" aria-label="City" aria-describedby="button-addon2">
+                    <div class="input-group-append">
+                      <button class="btn btn-outline-secondary citySearch" type="button" id="button-addon2">Search</button>
+                    </div>
+                  </div>    
+                  <div class="prevSearch"></div>              
+            </div>
+            <div class="col-9">
+                <section>
+                    <div class="jumbotron jumbotron-fluid">
+                        <div class="container">
+                            <h1 class="city"></h1>
+                            <p class="temp"></p>
+                            <p class="humid"></p>
+                            <p class="wind"></p>
+                            <p class="uv"></p>
+
+                        </div>
+                    </div>
+                </section>
+                <section class="5DayForcastSection">
+                    <h1>Five Day Forcast</h1>
+                    <article class="5DayForcast"></article>
+                </section>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="script.js"></script>
+</body>
