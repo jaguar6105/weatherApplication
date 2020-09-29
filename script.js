@@ -7,6 +7,7 @@ var display = {
 };
 
 var cityArray = [];
+var fiveDayForcast = [];
 
 
 $(".citySearch").on("click", function() {
@@ -44,11 +45,53 @@ $(".citySearch").on("click", function() {
               display.wind = response.wind.speed;
               //display.uv = response.
               updateDisplay();
+              api5DayForcast(display.city);
             });    
     }
 
+//ajax call for 5 day forcast
+    function api5DayForcast(city) {
+
+        var citySearch = city;
+        var apiKey = "9079e0330fe858fe04fbf89c11cb7f8c";
+
+        var queryURL = "https://api.openweathermap.org/data/2.5/forecast?q="+citySearch+"&appid="+ apiKey;
+
+        $.ajax({
+            url: queryURL,
+            method: "GET"
+          })
+            .then(function(response) {
+              fiveDayForcast = response.list;
+              fiveDayForcastDiv();
+            });
+    }
+
+    function fiveDayForcastDiv() {
+        $(".fiveDay").empty();
+        for(var i = 0; i < 5; i++) {
+            var div = $("<div>");
+            var date = $("<p>");
+            var temp = $("<p>");
+            var humid = $("<p>");
+
+            var dateStr = fiveDayForcast[i].dt_txt.split(" ");
+
+            date.text(dateStr[0]);
+            temp.text("Temp: " + fiveDayForcast[i].main.temp + " F");
+            humid.text("Humidity: " + fiveDayForcast[i].main.humidity + "%");
+
+            div.append(date);
+            div.append(temp);
+            div.append(humid);
+            $(".fiveDay").append(div);
+            console.log(fiveDayForcast[i]);
+            console.log(fiveDayForcast[i].dt_txt);
+        }
+    }
 
 
+//creates search divs
     function searchDiv(city) {
         var searchDiv = $("<div>");
           var p = $("<p>");
