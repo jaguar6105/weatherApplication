@@ -8,15 +8,12 @@ var display = {
 
 var cityArray = [];
 var fiveDayForcast = [];
+var citySearch;
 
 
 $(".citySearch").on("click", function() {
     var citySearch = $(".cityInput").val();
-    cityArray.unshift(citySearch);
-    storeData();
-
-    searchDiv(citySearch);
-    apiSearch(citySearch);
+    apiSearch(citySearch, true);
     });
 
     //display text in jumbotron
@@ -27,46 +24,52 @@ $(".citySearch").on("click", function() {
         $(".humid").text("Humidity: " + display.humid + "%");
         $(".wind").text("Wind Speed: " + display.wind + " MPH");
         $(".uv").text("UV Index: " + display.uv);
+        api5DayForcast(display.city);
     }
 
     //ajax call for current weather
-    function apiSearch(city) {
-        var citySearch = city;
+    function apiSearch(city ,search) {
+
         var apiKey = "9079e0330fe858fe04fbf89c11cb7f8c";
 
-        var queryURL = "https://api.openweathermap.org/data/2.5/weather?q="+citySearch+"&appid="+ apiKey;
+        var queryURL = "https://api.openweathermap.org/data/2.5/weather?q="+city+"&appid="+ apiKey;
 
         $.ajax({
             url: queryURL,
             method: "GET"
           })
             .then(function(response) {
-              console.log(response);
-              display.city = response.name;
-              display.temp = toFahr(response.main.temp);
-              display.humid = response.main.humidity;
-              display.wind = toMPH(response.wind.speed);
-              //display.uv = response.
-              updateDisplay();
-              api5DayForcast(display.city);
+                if(search) {
+                    cityArray.unshift(response.name);
+                    storeData();                
+                    searchDiv(response.name);                
+                }
+                display.city = response.name;
+              apiGetUV(response.coord.lat, response.coord.lon);
             });    
     }
 
-//ajax call for 5 day forcast
-    function api5DayForcast(city) {
+    
 
-        var citySearch = city;
+//ajax call for 5 day forcast
+    function apiGetUV(lat, lon) {
+
         var apiKey = "9079e0330fe858fe04fbf89c11cb7f8c";
 
-        var queryURL = "https://api.openweathermap.org/data/2.5/forecast?q="+citySearch+"&appid="+ apiKey;
+        var queryURL = "https://api.openweathermap.org/data/2.5/onecall?lat=" + lat + "&lon=" + lon + "&appid=" +apiKey;
 
         $.ajax({
             url: queryURL,
             method: "GET"
           })
             .then(function(response) {
-              fiveDayForcast = response.list;
-              fiveDayForcastDiv();
+              display.temp = toFahr(response.current.temp);
+              display.humid = response.current.humidity;
+              display.wind = toMPH(response.current.wind_speed);
+              display.uv = response.current.uvi;
+              updateDisplay();
+
+
             });
     }
 
@@ -83,9 +86,7 @@ $(".citySearch").on("click", function() {
             var dateStr = fiveDayForcast[i].dt_txt.split(" ");
 
             div.addClass("day");
-            //div.addClass("col-2");
             spaceDiv.addClass("space");
-
 
             date.text(dateStr[0]);
             temp.text("Temp: " + toFahr(fiveDayForcast[i].main.temp) + " F");
@@ -96,11 +97,26 @@ $(".citySearch").on("click", function() {
             div.append(humid);
             $(".fiveDay").append(div);
             $(".fiveDay").append(spaceDiv);
-            console.log(fiveDayForcast[i]);
-            console.log(fiveDayForcast[i].dt_txt);
         }
     }
 
+
+    //ajax call for 5 day forcast
+    function api5DayForcast(city) {
+
+        var apiKey = "9079e0330fe858fe04fbf89c11cb7f8c";
+        var queryURL = "https://api.openweathermap.org/data/2.5/forecast?q="+city+"&appid="+ apiKey;
+
+        $.ajax({
+            url: queryURL,
+            method: "GET"
+          })
+            .then(function(response) {
+            fiveDayForcast = response.list;
+            fiveDayForcastDiv();
+
+            });
+    }
 
 //creates search divs
     function searchDiv(city) {
@@ -113,7 +129,7 @@ $(".citySearch").on("click", function() {
           searchDiv.prependTo($(".prevSearch"));
 
           $(".search").on("click", function() {
-            apiSearch($(this).attr("city"));
+            apiSearch($(this).attr("city"), false);
         });
     }
 
@@ -142,7 +158,7 @@ function init() {
         for(var i = cityArray.length; i >= 0; i--) {
             searchDiv(cityArray[i]);
         }
-        apiSearch(cityArray[0]);
+        apiSearch(cityArray[0], false);
     }
 }
 
