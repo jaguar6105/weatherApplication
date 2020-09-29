@@ -75,11 +75,17 @@ $(".citySearch").on("click", function() {
         $(".fiveDay").empty();
         for(var i = 0; i < 5; i++) {
             var div = $("<div>");
+            var spaceDiv = $("<div>");
             var date = $("<p>");
             var temp = $("<p>");
             var humid = $("<p>");
 
             var dateStr = fiveDayForcast[i].dt_txt.split(" ");
+
+            div.addClass("day");
+            //div.addClass("col-2");
+            spaceDiv.addClass("space");
+
 
             date.text(dateStr[0]);
             temp.text("Temp: " + fiveDayForcast[i].main.temp + " F");
@@ -89,6 +95,7 @@ $(".citySearch").on("click", function() {
             div.append(temp);
             div.append(humid);
             $(".fiveDay").append(div);
+            $(".fiveDay").append(spaceDiv);
             console.log(fiveDayForcast[i]);
             console.log(fiveDayForcast[i].dt_txt);
         }

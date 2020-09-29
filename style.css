@@ -1,0 +1,10 @@
+.day {
+    background-color: blue;
+    color: white;
+    padding: 10px;
+}
+
+.space {
+    width: 30px;
+    background-color: white;
+}
