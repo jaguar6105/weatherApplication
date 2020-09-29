@@ -130,7 +130,6 @@ function api5DayForcast(city) {
         method: "GET"
     })
         .then(function (response) {
-            console.log(response);
             fiveDayForcast = response.list;
             fiveDayForcastDiv();
 
